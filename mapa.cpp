@@ -12,6 +12,11 @@ unsigned char *ht_map = SOIL_load_image ("mapa.png",
                                           &width, &height, &channels,
                                           SOIL_LOAD_RGB);
 
+
+
+float camPosZ=0;
+
+
 void map_init(){
   int i,j;
 
@@ -68,7 +73,9 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
   glTranslated(0.08,0.08,0.08);
   //gluLookAt(10.0,10.0,10.0,4.0,0.0,0.0,0.0,1.0,0.0);
-  gluLookAt(10.0,10.0,10.0,4.0,0.0,0.0,0.0,1.0,0.0);
+  gluLookAt( 10.0, 10.0-camPosZ, 10.0,
+             4.0, 0.0, 0.0,
+             0.0, 1.0, 0.0);
   //glTranslated(posx,posy,0);
   glTranslated(posx,0,posy);
   glPushMatrix();
@@ -112,7 +119,6 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
 int check_inbouds(int i, int j){
 
-
   if (i<0 || i>=height){ // out of bounds
       return 0;
   }
@@ -125,13 +131,17 @@ int check_inbouds(int i, int j){
 
   return 1;
 
+}
 
 
-
+void sobeCamera(){
+  camPosZ+=0.1;
 }
 
 
 void desenhaLabirinto(){
+
+  //glClear(GL_COLOR_BUFFER_BIT); //teste
   int i,j;
   for(i=0; i<height; i++){
     for(j=0; j<width; j++){
@@ -140,5 +150,5 @@ void desenhaLabirinto(){
       }
     }
   }
-
+  //glutSwapBuffers();
 }

@@ -7,6 +7,7 @@ void map_print();
 void wall();
 void draw_room();
 void desenhaLabirinto();
+void sobeCamera();
 
 
 

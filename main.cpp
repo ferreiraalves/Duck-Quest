@@ -11,6 +11,30 @@
 #include "mapa.h"
 #include "setup.h"
 
+
+
+// NOVIDADE: callback de "keyboard"
+void teclaPressionada(unsigned char key, int x, int y) {
+    //printf("%d -> %c\n",key,key);
+    // vê qual tecla foi pressionada
+    switch(key)
+    {
+        case 119: //tecla "w"
+            sobeCamera();
+            glutPostRedisplay();
+
+            break;
+
+        default:
+            break;
+    }
+}
+
+
+
+
+
+
 int main(int argc,char **argv) {
 
   map_init();
@@ -21,10 +45,16 @@ int main(int argc,char **argv) {
   glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB|GLUT_DEPTH);
   glutInitWindowSize(640,480);
   glutInitWindowPosition(0,0);
+
+
   glutCreateWindow("Cancer Dungeon");
 
 
   init_setup();
+
+
+
+
 
 
 
@@ -37,7 +67,7 @@ int main(int argc,char **argv) {
   glClearColor(0.1,0.1,0.1,0.0);
   glViewport(0,0,640,480);
 
-
+  glutKeyboardFunc(teclaPressionada);
 
   glutMainLoop();
 
