@@ -79,7 +79,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
 
 
-  float altura=0.8;
+  float altura=0.6;
 
 
 
