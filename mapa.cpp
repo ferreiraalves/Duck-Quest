@@ -15,6 +15,7 @@ unsigned char *ht_map = SOIL_load_image ("mapa.png",
 
 
 float camPosZ=0;
+float camPosX=0;
 
 
 void map_init(){
@@ -66,29 +67,39 @@ void wall(double thickness)    // function to create the walls with given thickn
 
 void draw_room(float posx, float posy, int esquerda, int direita, int cima, int baixo){
 
-  //tralar para pos xy
+
   //printf("E: %d , D: %d , C: %d B: %d \n",esquerda,direita,cima,baixo);
 
   glPushMatrix();
 
-  glTranslated(0.08,0.08,0.08);
-  //gluLookAt(10.0,10.0,10.0,4.0,0.0,0.0,0.0,1.0,0.0);
-  gluLookAt( 10.0, 10.0-camPosZ, 10.0,
-             4.0, 0.0, 0.0,
+
+
+
+
+  //printf ("%f\n",10.0-camPosZ);
+
+  //glTranslated(0.08,0.08,0.08);
+  //gluLookAt(10.0-camPosZ,10.0,10.0,4.0,0.0,0.0,0.0,1.0,0.0);
+
+  gluLookAt( 10.0+camPosX, 10.0+camPosZ, 10.0,
+             1.0, 0.8, 4.0,
              0.0, 1.0, 0.0);
-  //glTranslated(posx,posy,0);
+
+  // //glTranslated(posx,posy,0);
   glTranslated(posx,0,posy);
   glPushMatrix();
   glTranslated(0.6,0.38,0.5);
   glRotated(30,0,1,0);
   //glutSolidTeapot(0.08);
   glPopMatrix();
-  // glPushMatrix();
-  // glTranslated(0.25,0.42,0.35);
-  // glPopMatrix();
-  // glPushMatrix();
-  // glTranslated(0.4,0,0.4);
-  // glPopMatrix();
+
+  glPushMatrix();
+  glTranslated(0.25,0.42,0.35);
+  glPopMatrix();
+  glPushMatrix();
+  glTranslated(0.4,0,0.4);
+  glPopMatrix();
+
   wall(0.02); // CHAO
 
   glTranslated(0.0,0.99,0.0);
@@ -108,11 +119,22 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   glTranslated(0.0,-1.0,0.0);
   if(!baixo)
     wall(0.02); // paraede frente
+
+
+
+
+
   glPopMatrix();
 
 
 
+
+
   glFlush();
+
+
+
+
 
 }
 
@@ -134,14 +156,39 @@ int check_inbouds(int i, int j){
 }
 
 
-void sobeCamera(){
+void sobeCameraZ(){
   camPosZ+=0.1;
 }
+void desceCameraZ(){
+  camPosZ-=0.1;
+}
+
+void sobeCameraX(){
+  camPosX+=0.1;
+}
+void desceCameraX(){
+  camPosX-=0.1;
+}
+
+
+
+
+
 
 
 void desenhaLabirinto(){
 
-  //glClear(GL_COLOR_BUFFER_BIT); //teste
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //teste
+
+  //glPushMatrix();
+
+  // gluLookAt(  10.0+camPosX, 10.08+camPosZ, 10.0,
+  //             1.0, 0.8, 4.0,
+  //             0.0, 1.0, 0.0);
+  //
+  //
+  // glPopMatrix();
+
   int i,j;
   for(i=0; i<height; i++){
     for(j=0; j<width; j++){
@@ -150,5 +197,6 @@ void desenhaLabirinto(){
       }
     }
   }
-  //glutSwapBuffers();
+
+  glutSwapBuffers();
 }

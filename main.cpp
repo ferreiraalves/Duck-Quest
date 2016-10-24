@@ -15,19 +15,32 @@
 
 // NOVIDADE: callback de "keyboard"
 void teclaPressionada(unsigned char key, int x, int y) {
-    //printf("%d -> %c\n",key,key);
+    printf("%d -> %c\n",key,key);
     // vê qual tecla foi pressionada
     switch(key)
     {
         case 119: //tecla "w"
-            sobeCamera();
-            glutPostRedisplay();
-
+            sobeCameraZ();
             break;
+
+        case 115: //tecla "a"
+            desceCameraZ();
+            break;
+
+        case 97: //tecla "a"
+            desceCameraX();
+            break;
+
+        case 100: //tecla "a"
+            sobeCameraX();
+            break;
+
+
 
         default:
             break;
     }
+    glutPostRedisplay();
 }
 
 
