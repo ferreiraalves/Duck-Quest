@@ -11,8 +11,8 @@ int facing=1;
 int player_i=0;
 int player_j=0;
 
-
 void move_fwd(){
+  
   if(facing==1 && check_inbouds(player_i,player_j+1)){
     player_posy+=1;
     player_j+=1;
@@ -125,5 +125,5 @@ void player_restart(){
 
   player_i=0;
   player_j=0;
-  
+
 }

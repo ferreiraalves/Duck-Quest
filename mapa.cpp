@@ -85,7 +85,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
 
   if(getFacing()==1){
-    gluLookAt( getX(), altura+camPosZ, getY()-camPosZ,
+    gluLookAt( getX(), altura+camPosZ/5*2, getY()-camPosZ/5*3,
                getX(), altura, getY()+1,
                0.0, 1.0, 0.0);
     //printf("Olhando para direita");
@@ -93,7 +93,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
   if(getFacing()==2){
 
-    gluLookAt( getX()+camPosZ, altura+camPosZ, getY(),
+    gluLookAt( getX()+camPosZ/5*3, altura+camPosZ/5*2, getY(),
                getX()-1, altura, getY(),
                0.0, 1.0, 0.0);
 
@@ -102,14 +102,14 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   }
 
   if(getFacing()==3){
-    gluLookAt( getX(), altura+camPosZ, getY()+camPosZ,
+    gluLookAt( getX(), altura+camPosZ/5*2, getY()+camPosZ/5*3,
                getX(), altura, getY()-1,
                0.0, 1.0, 0.0);
     //printf("Olhando para esquerda");
   }
 
   if(getFacing()==0){
-    gluLookAt( getX()-camPosZ, altura+camPosZ, getY(),
+    gluLookAt( getX()-camPosZ/5*3, altura+camPosZ/5*2, getY(),
                getX()+1, altura, getY(),
                0.0, 1.0, 0.0);
     //printf("Olhando para cima");
