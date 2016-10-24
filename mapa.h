@@ -11,6 +11,7 @@ void sobeCameraZ();
 void desceCameraZ();
 void sobeCameraX();
 void desceCameraX();
+int check_inbouds(int i, int j);
 
 
 #endif

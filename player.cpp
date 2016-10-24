@@ -2,42 +2,52 @@
 #include<stdlib.h>
 #include "SOIL/SOIL.h"
 #include <GL/freeglut.h>
+#include "mapa.h"
 
-
-float player_posx=0.5;
-float player_posy=0.5;
+float player_posx=0.48;
+float player_posy=0.48;
 int facing=1;
+
+int player_i=0;
+int player_j=0;
 
 
 void move_fwd(){
-
-  if(facing==1){
+  if(facing==1 && check_inbouds(player_i,player_j+1)){
     player_posy+=1;
+    player_j+=1;
   }
-  if(facing==2){
+  if(facing==2 && check_inbouds(player_i-1,player_j)){
     player_posx-=1;
+    player_i-=1;
   }
-  if(facing==3){
+  if(facing==3&& check_inbouds(player_i,player_j-1)){
     player_posy-=1;
+    player_j-=1;
   }
-  if(facing==0){
+  if(facing==0 && check_inbouds(player_i+1,player_j)){
     player_posx+=1;
+    player_i+=1;
   }
 }
 
 void move_bkwd(){
 
-  if(facing==1){
+  if(facing==1 && check_inbouds(player_i,player_j-1)){
     player_posy-=1;
+    player_j-=1;
   }
-  if(facing==2){
+  if(facing==2 && check_inbouds(player_i+1,player_j)){
     player_posx+=1;
+    player_i+=1;
   }
-  if(facing==3){
+  if(facing==3 && check_inbouds(player_i,player_j+1)){
     player_posy+=1;
+    player_j+=1;
   }
-  if(facing==0){
+  if(facing==0&& check_inbouds(player_i-1,player_j) ){
     player_posx-=1;
+    player_i-=1;
   }
 }
 
@@ -60,6 +70,7 @@ void turn_left(){
 
 
 }
+
 
 
 void turn_right(){
@@ -89,4 +100,20 @@ float getY(){
 
 float getFacing(){
   return facing;
+}
+
+int getI(){
+  return player_i;
+}
+
+int getJ(){
+  return player_j;
+}
+
+void moveI(int aux){
+  player_i+=aux;
+}
+
+void moveJ(int aux){
+  player_j+=aux;
 }

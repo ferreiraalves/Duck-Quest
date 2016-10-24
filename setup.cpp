@@ -24,7 +24,7 @@ void init_setup(){
   //glOrtho(-winlet*64/48,winlet*64/48.0,-winlet*64/48,winlet*64/48,0.6,100.0);
 
   //glFrustum(-1.0,1.0,-1.0,1.0,1.0,100.0);
-  glFrustum(-0.5,.5,-0.5,0.5,0.5,100.0);
+  glFrustum(-0.25,0.25,-0.25,0.25,0.25,100.0);
 
 
   //gluPerspective(60.0,winlet*64/48.0, 2.0, 100.0);

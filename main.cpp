@@ -20,6 +20,7 @@ void teclaPressionada(unsigned char key, int x, int y) {
     switch(key)
     {
         case 119: //tecla "w"
+
             move_fwd();
             break;
 

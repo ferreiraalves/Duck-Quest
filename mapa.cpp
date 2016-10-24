@@ -6,8 +6,6 @@
 
 #include "player.h"
 
-
-
 const int largura = 400;
 const int altura = 400;
 int map [largura][altura];
@@ -79,7 +77,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
 
 
-  float altura=0.6;
+  float altura=0.55;
 
 
 
