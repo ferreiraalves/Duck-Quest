@@ -4,6 +4,10 @@
 #include <GL/freeglut.h> // Facilita a criação de código e portabilidade do código OpenGL
 //#include <iostream.h>
 
+#include "player.h"
+
+
+
 const int largura = 400;
 const int altura = 400;
 int map [largura][altura];
@@ -16,6 +20,7 @@ unsigned char *ht_map = SOIL_load_image ("mapa.png",
 
 float camPosZ=0;
 float camPosX=0;
+
 
 
 void map_init(){
@@ -74,16 +79,46 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
 
 
+  float altura=0.8;
 
 
-  //printf ("%f\n",10.0-camPosZ);
 
   //glTranslated(0.08,0.08,0.08);
   //gluLookAt(10.0-camPosZ,10.0,10.0,4.0,0.0,0.0,0.0,1.0,0.0);
 
-  gluLookAt( 10.0+camPosX, 10.0+camPosZ, 10.0,
-             1.0, 0.8, 4.0,
-             0.0, 1.0, 0.0);
+
+  if(getFacing()==1){
+    gluLookAt( getX(), altura, getY(),
+               getX(), altura, getY()+1,
+               0.0, 1.0, 0.0);
+    //printf("Olhando para direita");
+  }
+
+  if(getFacing()==2){
+
+    gluLookAt( getX(), altura, getY(),
+               getX()-1, altura, getY(),
+               0.0, 1.0, 0.0);
+
+
+    //printf("Olhando para baixo");
+  }
+
+  if(getFacing()==3){
+    gluLookAt( getX(), altura, getY(),
+               getX(), altura, getY()-1,
+               0.0, 1.0, 0.0);
+    //printf("Olhando para esquerda");
+  }
+
+  if(getFacing()==0){
+    gluLookAt( getX(), altura, getY(),
+               getX()+1, altura, getY(),
+               0.0, 1.0, 0.0);
+    //printf("Olhando para cima");
+  }
+
+
 
   // //glTranslated(posx,posy,0);
   glTranslated(posx,0,posy);
@@ -103,7 +138,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   wall(0.02); // CHAO
 
   glTranslated(0.0,0.99,0.0);
-  //wall(0.02);  //TETO
+  wall(0.02);  //TETO
   glTranslated(0.0,-0.99,0.0);
   glPushMatrix();
   glRotated(-90.0,1.0,0.0,0.0);

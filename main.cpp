@@ -10,7 +10,7 @@
 
 #include "mapa.h"
 #include "setup.h"
-
+#include "player.h"
 
 
 // NOVIDADE: callback de "keyboard"
@@ -20,19 +20,19 @@ void teclaPressionada(unsigned char key, int x, int y) {
     switch(key)
     {
         case 119: //tecla "w"
-            sobeCameraZ();
+            move_fwd();
             break;
 
         case 115: //tecla "a"
-            desceCameraZ();
+            move_bkwd();
             break;
 
         case 97: //tecla "a"
-            desceCameraX();
+            turn_left();
             break;
 
-        case 100: //tecla "a"
-            sobeCameraX();
+        case 100: //tecla "d"
+            turn_right();
             break;
 
 
