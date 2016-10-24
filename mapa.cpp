@@ -17,8 +17,7 @@ unsigned char *ht_map = SOIL_load_image ("mapa.png",
 
 
 float camPosZ=0;
-float camPosX=0;
-
+float camPosX;
 
 
 void map_init(){
@@ -86,7 +85,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
 
   if(getFacing()==1){
-    gluLookAt( getX(), altura, getY(),
+    gluLookAt( getX(), altura+camPosZ, getY()-camPosZ,
                getX(), altura, getY()+1,
                0.0, 1.0, 0.0);
     //printf("Olhando para direita");
@@ -94,7 +93,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
   if(getFacing()==2){
 
-    gluLookAt( getX(), altura, getY(),
+    gluLookAt( getX()+camPosZ, altura+camPosZ, getY(),
                getX()-1, altura, getY(),
                0.0, 1.0, 0.0);
 
@@ -103,14 +102,14 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   }
 
   if(getFacing()==3){
-    gluLookAt( getX(), altura, getY(),
+    gluLookAt( getX(), altura+camPosZ, getY()+camPosZ,
                getX(), altura, getY()-1,
                0.0, 1.0, 0.0);
     //printf("Olhando para esquerda");
   }
 
   if(getFacing()==0){
-    gluLookAt( getX(), altura, getY(),
+    gluLookAt( getX()-camPosZ, altura+camPosZ, getY(),
                getX()+1, altura, getY(),
                0.0, 1.0, 0.0);
     //printf("Olhando para cima");
@@ -136,7 +135,8 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   wall(0.02); // CHAO
 
   glTranslated(0.0,0.99,0.0);
-  wall(0.02);  //TETO
+  if(camPosZ==0)
+    wall(0.02);  //TETO
   glTranslated(0.0,-0.99,0.0);
   glPushMatrix();
   glRotated(-90.0,1.0,0.0,0.0);
@@ -163,7 +163,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
 
 
-  glFlush();
+  //glFlush();
 
 
 
@@ -190,7 +190,11 @@ int check_inbouds(int i, int j){
 
 
 void sobeCameraZ(){
-  camPosZ+=0.1;
+  if(camPosZ==0)
+    camPosZ=1;
+  else
+    camPosZ=0;
+
 }
 void desceCameraZ(){
   camPosZ-=0.1;
@@ -222,7 +226,10 @@ void desenhaLabirinto(){
   //
   // glPopMatrix();
 
-  int i,j;
+  int i;
+  int j;
+
+
   for(i=0; i<height; i++){
     for(j=0; j<width; j++){
       if(map[i][j]!=0){
@@ -230,6 +237,6 @@ void desenhaLabirinto(){
       }
     }
   }
-
+  glFlush();
   glutSwapBuffers();
 }

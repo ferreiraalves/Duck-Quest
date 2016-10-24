@@ -36,6 +36,15 @@ void teclaPressionada(unsigned char key, int x, int y) {
             turn_right();
             break;
 
+        case 99: //tecla "c"
+            sobeCameraZ();
+            break;
+
+        case 114: //tecla "c"
+            player_restart();
+            break;
+
+
 
 
         default:
@@ -57,7 +66,7 @@ int main(int argc,char **argv) {
 
   glutInit(&argc,argv);
   glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB|GLUT_DEPTH);
-  glutInitWindowSize(640,480);
+  glutInitWindowSize(800,600);
   glutInitWindowPosition(0,0);
 
 

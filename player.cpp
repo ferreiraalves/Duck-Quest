@@ -4,8 +4,8 @@
 #include <GL/freeglut.h>
 #include "mapa.h"
 
-float player_posx=0.48;
-float player_posy=0.48;
+float player_posx=0.5;
+float player_posy=0.5;
 int facing=1;
 
 int player_i=0;
@@ -53,7 +53,7 @@ void move_bkwd(){
 
 void turn_left(){
 
-  printf("Estava em: %d\n",facing);
+  //printf("Estava em: %d\n",facing);
   if(facing==0){
     facing=3;
   }
@@ -66,15 +66,13 @@ void turn_left(){
   else if(facing==3){
     facing=2;
   }
-  printf("Foi para: %d\n",facing);
+  //printf("Foi para: %d\n",facing);
 
 
 }
 
-
-
 void turn_right(){
-  printf("Estava em: %d\n",facing);
+  //printf("Estava em: %d\n",facing);
   if(facing==0){
     facing=1;
   }
@@ -87,7 +85,7 @@ void turn_right(){
   else if(facing==3){
     facing=0;
   }
-  printf("Foi para: %d\n",facing);
+  //printf("Foi para: %d\n",facing);
 }
 
 float getX(){
@@ -116,4 +114,16 @@ void moveI(int aux){
 
 void moveJ(int aux){
   player_j+=aux;
+}
+
+
+void player_restart(){
+
+  player_posx=0.5;
+  player_posy=0.5;
+  facing=1;
+
+  player_i=0;
+  player_j=0;
+  
 }

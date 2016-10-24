@@ -8,7 +8,14 @@ void turn_right();
 float getX();
 float getY();
 float getFacing();
+int getI();
 
+int getJ();
 
+void moveI();
+
+void moveJ();
+
+void player_restart();
 
 #endif
