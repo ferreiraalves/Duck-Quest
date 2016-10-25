@@ -40,7 +40,7 @@ void teclaPressionada(unsigned char key, int x, int y) {
             sobeCameraZ();
             break;
 
-        case 114: //tecla "c"
+        case 114: //tecla "r"
             player_restart();
             break;
 
@@ -68,6 +68,19 @@ int main(int argc,char **argv) {
   map_init();
   map_print();
 
+  printf("\nControles: \n");
+
+  printf("\nW: Da um passo para frente");
+  printf("\nS: Da um passa para tras");
+  printf("\nA: Vira para a esquerda");
+  printf("\nD: Vira para a direita");
+  printf("\n");
+  printf("\nC: Camera");
+  printf("\nR: Reset");
+  printf("\nQ: Muda Piso");
+  printf("\nG: Gera novo labirinto (pode demorar)");
+  printf("\n");
+  printf("\n");
 
   glutInit(&argc,argv);
   glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB|GLUT_DEPTH);
@@ -76,6 +89,8 @@ int main(int argc,char **argv) {
 
 
   glutCreateWindow("Duck Quest");
+
+
 
 
   init_setup();
@@ -94,9 +109,6 @@ int main(int argc,char **argv) {
   glutKeyboardFunc(teclaPressionada);
 
   glutMainLoop();
-
-
-
 
 
   return 0;

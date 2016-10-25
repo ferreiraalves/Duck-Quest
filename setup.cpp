@@ -7,6 +7,12 @@
 
 void init_setup(){
 
+
+
+  
+
+
+
   GLfloat mat_ambient[]={0.7f,0.7f,0.7f,0.1f};
   GLfloat mat_diffuse[]={0.5f,0.5f,0.5f,1.0f};
   GLfloat mat_specular[]={1.0f,1.0f,1.0f,1.0f};

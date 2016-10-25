@@ -25,7 +25,7 @@ float camModo=0;
 float camPosX;
 
 int floor=0;
-int drawdist = 5;
+int drawdist = 10;
 
 
 void map_init(){
@@ -518,8 +518,8 @@ void verifica(elemento matrx [altura][largura],int i,int j, int xde, int yde,coo
 
   if (i==xde && j==yde){
     flag=1;
-    printf("\nExiste caminho possivel:");
-    imprimePilha(pilha);
+    //printf("\nExiste caminho possivel:");
+    //imprimePilha(pilha);
   }
 
   if(validaXY(i+1,j) && matrx [i+1][j].percorrido==0 && matrx [i+1][j].valor==1 && flag==0){
@@ -541,11 +541,18 @@ void verifica(elemento matrx [altura][largura],int i,int j, int xde, int yde,coo
 
 void generate_random(){
   int i,j;
+  long cont=0;
   srand(time(NULL));
   elemento matriz [altura][largura];
-
+  printf("Gerando Nova Matriz\n");
   while (flag!=1){
-    printf("Gerando Matriz\n");
+    cont++;
+
+    if(cont%10000==0){
+      printf(".");
+      fflush(stdout);
+    }
+
     coord pilha[tam];
     inicializa(matriz);
     //imprime(matriz);
@@ -558,6 +565,11 @@ void generate_random(){
   }
   map[0][0]=3;
   map[height-1][width-1]=2;
+
+  printf("\n");
+  printf("\n\nSUCESSO\n\n");
+  printf("\n");
+  printf("\n");
 
   map_print();
   player_restart();
