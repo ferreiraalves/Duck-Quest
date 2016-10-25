@@ -28,6 +28,8 @@ int validaXY();
 
 void verifica();
 
+void duck();
+
 void changefloor();
 
 

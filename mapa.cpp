@@ -106,9 +106,7 @@ static void drawBoxWall(GLfloat size, GLenum type){
   }
 }
 
-void APIENTRY
-glutSolidCubeWall(GLdouble size)
-{
+void APIENTRY glutSolidCubeWall (GLdouble size){
   drawBoxWall(size, GL_QUADS);
 }
 
@@ -120,6 +118,21 @@ void wall(double thickness)    // function to create the walls with given thickn
     glScaled(1.0,thickness,1.0);
     glutSolidCubeWall(1.0);
     glPopMatrix();
+}
+
+int animacao=0;
+
+
+
+void duck(){
+  glTranslated(0.0, 0.1, 0.0);
+  glutSolidCubeWall(0.1);
+  glTranslated(0.0, 0.1, 0.0);
+  glutSolidCubeWall(0.05);
+  glTranslated(0.0, -0.2, -0.02);
+  glutSolidCubeWall(0.03);
+  glTranslated(0.0, 0.0, 0.04);
+  glutSolidCubeWall(0.03);
 }
 
 
@@ -191,24 +204,23 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
       glPushMatrix();
       glRotated(-90.0,0.0,1.0,0.0);
 
-      glTranslated(0.0, 0.1, 0.0);
-      glutSolidCubeWall(0.1);
-      glTranslated(0.0, 0.1, 0.0);
 
-      glutSolidCubeWall(0.05);
+
+      duck();
+
       glPopMatrix();
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
     if(getFacing()==0){
       glBindTexture(GL_TEXTURE_2D, loadChar());
-      glutSolidTeapot(0.1);
+      duck();
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
     if(getFacing()==2){
       glBindTexture(GL_TEXTURE_2D, loadChar());
       glPushMatrix();
       glRotated(-180.0,0.0,1.0,0.0);
-      glutSolidTeapot(0.1);
+      duck();
       glPopMatrix();
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
@@ -216,7 +228,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
       glBindTexture(GL_TEXTURE_2D, loadChar());
       glPushMatrix();
       glRotated(90.0,0.0,1.0,0.0);
-      glutSolidTeapot(0.1);
+      duck();
       glPopMatrix();
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
