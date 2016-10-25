@@ -3,10 +3,10 @@
 
 
 GLuint loadWall();
-GLuint loadChar();
+GLuint loadMetal();
 GLuint loadFloor();
-
-
+GLuint loadPinto();
+GLuint loadPe();
 
 
 #endif

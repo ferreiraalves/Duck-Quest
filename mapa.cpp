@@ -21,6 +21,7 @@ unsigned char *ht_map = SOIL_load_image ("mapa.png",
 
 
 float camPosZ=0;
+float camModo;
 float camPosX;
 
 int floor=0;
@@ -120,19 +121,28 @@ void wall(double thickness)    // function to create the walls with given thickn
     glPopMatrix();
 }
 
-int animacao=0;
+float frame=1;
 
-
+void switch_frame(){
+  if (frame==0)
+    frame=1;
+  else
+    frame=0;
+}
 
 void duck(){
+  glBindTexture(GL_TEXTURE_2D, loadPinto());
   glTranslated(0.0, 0.1, 0.0);
   glutSolidCubeWall(0.1);
   glTranslated(0.0, 0.1, 0.0);
   glutSolidCubeWall(0.05);
-  glTranslated(0.0, -0.2, -0.02);
+  glBindTexture(GL_TEXTURE_2D, loadPe());
+  glTranslated(-frame/40, -0.2, -0.02);
   glutSolidCubeWall(0.03);
-  glTranslated(0.0, 0.0, 0.04);
+  glTranslated(2*frame/40, 0.0, 0.04);
   glutSolidCubeWall(0.03);
+
+  switch_frame();
 }
 
 
@@ -155,7 +165,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
 
   if(getFacing()==1){
-    gluLookAt( getX(), altura+camPosZ/5*2, getY()-camPosZ/5*3,
+    gluLookAt( getX(), altura+camPosZ/5*1, getY()-camPosZ/5*3,
                getX(), altura, getY()+1,
                0.0, 1.0, 0.0);
     //printf("Olhando para direita");
@@ -163,7 +173,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
   if(getFacing()==2){
 
-    gluLookAt( getX()+camPosZ/5*3, altura+camPosZ/5*2, getY(),
+    gluLookAt( getX()+camPosZ/5*3, altura+camPosZ/5*1, getY(),
                getX()-1, altura, getY(),
                0.0, 1.0, 0.0);
 
@@ -172,14 +182,14 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   }
 
   if(getFacing()==3){
-    gluLookAt( getX(), altura+camPosZ/5*2, getY()+camPosZ/5*3,
+    gluLookAt( getX(), altura+camPosZ/5*1, getY()+camPosZ/5*3,
                getX(), altura, getY()-1,
                0.0, 1.0, 0.0);
     //printf("Olhando para esquerda");
   }
 
   if(getFacing()==0){
-    gluLookAt( getX()-camPosZ/5*3, altura+camPosZ/5*2, getY(),
+    gluLookAt( getX()-camPosZ/5*3, altura+camPosZ/5*1, getY(),
                getX()+1, altura, getY(),
                0.0, 1.0, 0.0);
     //printf("Olhando para cima");
@@ -200,7 +210,6 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   if(posx==getI() && posy==getJ() && camPosZ!=0){ //desenha personagem
 
     if(getFacing()==1){
-      glBindTexture(GL_TEXTURE_2D, loadChar());
       glPushMatrix();
       glRotated(-90.0,0.0,1.0,0.0);
 
@@ -212,12 +221,11 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
     if(getFacing()==0){
-      glBindTexture(GL_TEXTURE_2D, loadChar());
+
       duck();
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
     if(getFacing()==2){
-      glBindTexture(GL_TEXTURE_2D, loadChar());
       glPushMatrix();
       glRotated(-180.0,0.0,1.0,0.0);
       duck();
@@ -225,7 +233,6 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
     if(getFacing()==3){
-      glBindTexture(GL_TEXTURE_2D, loadChar());
       glPushMatrix();
       glRotated(90.0,0.0,1.0,0.0);
       duck();

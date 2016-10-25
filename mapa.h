@@ -32,6 +32,6 @@ void duck();
 
 void changefloor();
 
-
+void switch_frame();
 
 #endif
