@@ -6,6 +6,7 @@
 //#include <iostream.h>
 
 #include "player.h"
+#include "textures.h"
 
 const int tam = 200;
 const int largura = 400;
@@ -23,7 +24,7 @@ float camPosZ=0;
 float camPosX;
 
 int floor=0;
-int drawdist = 15;
+int drawdist = 10;
 
 
 void map_init(){
@@ -63,44 +64,6 @@ void map_print(){
 }
 
 
-GLuint loadWall() {
-    int aux=SOIL_load_OGL_texture(
-        "floor.jpg", // Textura da mira
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_INVERT_Y
-    );
-    if (aux==0){
-        printf("Erro do SOIL: %s\n",SOIL_last_result());
-    }
-    return aux;
-}
-
-GLuint loadChar() {
-    int aux=SOIL_load_OGL_texture(
-        "mapa.png", // Textura da mira
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_INVERT_Y
-    );
-    if (aux==0){
-        printf("Erro do SOIL: %s\n",SOIL_last_result());
-    }
-    return aux;
-}
-
-GLuint loadFloor() {
-    int aux=SOIL_load_OGL_texture(
-        "truefloor2.jpg", // Textura da mira
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_INVERT_Y
-    );
-    if (aux==0){
-        printf("Erro do SOIL: %s\n",SOIL_last_result());
-    }
-    return aux;
-}
 
 
 static void drawBoxWall(GLfloat size, GLenum type){
@@ -221,26 +184,31 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   glTranslated(0.6,0.38,0.5);
 
 
-  if(posx==getI() && posy==getJ() && camPosZ!=0){ //rotaciona personagem
+  if(posx==getI() && posy==getJ() && camPosZ!=0){ //desenha personagem
 
     if(getFacing()==1){
       glBindTexture(GL_TEXTURE_2D, loadChar());
       glPushMatrix();
       glRotated(-90.0,0.0,1.0,0.0);
-      glutSolidTeapot(0.2);
+
+      glTranslated(0.0, 0.1, 0.0);
+      glutSolidCubeWall(0.1);
+      glTranslated(0.0, 0.1, 0.0);
+
+      glutSolidCubeWall(0.05);
       glPopMatrix();
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
     if(getFacing()==0){
       glBindTexture(GL_TEXTURE_2D, loadChar());
-      glutSolidTeapot(0.2);
+      glutSolidTeapot(0.1);
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
     if(getFacing()==2){
       glBindTexture(GL_TEXTURE_2D, loadChar());
       glPushMatrix();
       glRotated(-180.0,0.0,1.0,0.0);
-      glutSolidTeapot(0.2);
+      glutSolidTeapot(0.1);
       glPopMatrix();
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
@@ -248,7 +216,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
       glBindTexture(GL_TEXTURE_2D, loadChar());
       glPushMatrix();
       glRotated(90.0,0.0,1.0,0.0);
-      glutSolidTeapot(0.2);
+      glutSolidTeapot(0.1);
       glPopMatrix();
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
@@ -542,10 +510,10 @@ void generate_random(){
 void changefloor(){
   if(floor==0){
     floor=1;
-    drawdist=10;
+    drawdist=5;
   }else{
     floor=0;
-    drawdist=15;
+    drawdist=10;
   }
 
 

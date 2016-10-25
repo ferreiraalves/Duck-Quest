@@ -11,7 +11,7 @@
 #include "mapa.h"
 #include "setup.h"
 #include "player.h"
-
+#include "textures.h"
 
 // NOVIDADE: callback de "keyboard"
 void teclaPressionada(unsigned char key, int x, int y) {
@@ -50,7 +50,7 @@ void teclaPressionada(unsigned char key, int x, int y) {
 
         case 113: //tecla "q"
             changefloor();
-            
+
 
         default:
             break;
