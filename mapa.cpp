@@ -22,6 +22,9 @@ unsigned char *ht_map = SOIL_load_image ("mapa.png",
 float camPosZ=0;
 float camPosX;
 
+int floor=0;
+int drawdist = 15;
+
 
 void map_init(){
   int i,j;
@@ -62,7 +65,33 @@ void map_print(){
 
 GLuint loadWall() {
     int aux=SOIL_load_OGL_texture(
-        "floors.jpg", // Textura da mira
+        "floor.jpg", // Textura da mira
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+    );
+    if (aux==0){
+        printf("Erro do SOIL: %s\n",SOIL_last_result());
+    }
+    return aux;
+}
+
+GLuint loadChar() {
+    int aux=SOIL_load_OGL_texture(
+        "mapa.png", // Textura da mira
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+    );
+    if (aux==0){
+        printf("Erro do SOIL: %s\n",SOIL_last_result());
+    }
+    return aux;
+}
+
+GLuint loadFloor() {
+    int aux=SOIL_load_OGL_texture(
+        "truefloor2.jpg", // Textura da mira
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_INVERT_Y
@@ -74,9 +103,7 @@ GLuint loadWall() {
 }
 
 
-static void
-drawBoxWall(GLfloat size, GLenum type)
-{
+static void drawBoxWall(GLfloat size, GLenum type){
   static GLfloat n[6][3] =
   {
     {-1.0, 0.0, 0.0},
@@ -183,21 +210,53 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   }
 
 
-
-
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, loadWall());
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-
+  glPolygonMode(GL_FRONT, GL_FILL);
 
 
   // //glTranslated(posx,posy,0);
   glTranslated(posx,0,posy);
   glPushMatrix();
   glTranslated(0.6,0.38,0.5);
+
+
+  if(posx==getI() && posy==getJ() && camPosZ!=0){ //rotaciona personagem
+
+    if(getFacing()==1){
+      glBindTexture(GL_TEXTURE_2D, loadChar());
+      glPushMatrix();
+      glRotated(-90.0,0.0,1.0,0.0);
+      glutSolidTeapot(0.2);
+      glPopMatrix();
+      glBindTexture(GL_TEXTURE_2D, loadWall());
+    }
+    if(getFacing()==0){
+      glBindTexture(GL_TEXTURE_2D, loadChar());
+      glutSolidTeapot(0.2);
+      glBindTexture(GL_TEXTURE_2D, loadWall());
+    }
+    if(getFacing()==2){
+      glBindTexture(GL_TEXTURE_2D, loadChar());
+      glPushMatrix();
+      glRotated(-180.0,0.0,1.0,0.0);
+      glutSolidTeapot(0.2);
+      glPopMatrix();
+      glBindTexture(GL_TEXTURE_2D, loadWall());
+    }
+    if(getFacing()==3){
+      glBindTexture(GL_TEXTURE_2D, loadChar());
+      glPushMatrix();
+      glRotated(90.0,0.0,1.0,0.0);
+      glutSolidTeapot(0.2);
+      glPopMatrix();
+      glBindTexture(GL_TEXTURE_2D, loadWall());
+    }
+
+
+  }
   glRotated(30,0,1,0);
-  //glutSolidTeapot(0.08);
+
   glPopMatrix();
 
   glPushMatrix();
@@ -207,7 +266,16 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   glTranslated(0.4,0,0.4);
   glPopMatrix();
 
-  wall(0.02); // CHAO
+  if(floor!=0){
+
+    glBindTexture(GL_TEXTURE_2D, loadFloor());
+    wall(0.02); // CHAO
+    glBindTexture(GL_TEXTURE_2D, loadWall());
+  }else{
+    wall(0.02); // CHAO
+  }
+
+
 
   glTranslated(0.0,0.99,0.0);
   if(camPosZ==0)
@@ -290,12 +358,36 @@ void desenhaLabirinto(){
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //teste
 
-  int i;
-  int j;
 
 
-  for(i=0; i<height; i++){
-    for(j=0; j<width; j++){
+  int i=getI();
+  int j=getJ();
+
+  int drawXmin = i - drawdist;
+  int drawXmax = i + drawdist;
+  int drawYmin = j -drawdist;
+  int drawYmax = j + drawdist;
+
+
+
+  if (drawXmin<0){
+    drawXmin=0;
+  }
+  if (drawYmin<0){
+    drawXmin=0;
+  }
+  if(drawXmax>=height){
+    drawXmax=height-1;
+  }
+  if(drawXmax>=width){
+    drawXmax=width-1;
+  }
+
+
+
+
+  for(i=drawXmin; i<drawXmax; i++){
+    for(j=drawYmin; j<drawYmax; j++){
       if(map[i][j]!=0){
           draw_room(i,j,check_inbouds(i,j-1),check_inbouds(i,j+1),check_inbouds(i-1,j),check_inbouds(i+1,j));
       }
@@ -444,5 +536,17 @@ void generate_random(){
   map_print();
   player_restart();
   flag=0;
+}
+
+
+void changefloor(){
+  if(floor==0){
+    floor=1;
+    drawdist=10;
+  }else{
+    floor=0;
+    drawdist=15;
+  }
+
 
 }
