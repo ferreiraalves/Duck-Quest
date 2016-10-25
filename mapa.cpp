@@ -132,6 +132,7 @@ void switch_frame(){
 
 void duck(){
   glBindTexture(GL_TEXTURE_2D, loadPinto());
+  glTranslated(0.0, -0.05, 0.0);
   glTranslated(0.0, 0.1, 0.0);
   glutSolidCubeWall(0.1);
   glTranslated(0.0, 0.1, 0.0);
