@@ -2,11 +2,11 @@
 #include<stdlib.h>
 #include "SOIL/SOIL.h"
 #include <GL/freeglut.h> // Facilita a criação de código e portabilidade do código OpenGL
-#include <GL/glm.h>
 #include<time.h>
 //#include <iostream.h>
 
 #include "player.h"
+#include "textures.h"
 
 const int tam = 200;
 const int largura = 400;
@@ -22,6 +22,11 @@ unsigned char *ht_map = SOIL_load_image ("mapa.png",
 
 float camPosZ=0;
 float camPosX;
+
+
+int floor=0;
+int drawdist = 10;
+
 
 void map_init(){
   int i,j;
@@ -60,23 +65,9 @@ void map_print(){
 }
 
 
-GLuint loadWall() {
-    int aux=SOIL_load_OGL_texture(
-        "floors.jpg", // Textura da mira
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_INVERT_Y
-    );
-    if (aux==0){
-        printf("Erro do SOIL: %s\n",SOIL_last_result());
-    }
-    return aux;
-}
 
 
-static void
-drawBoxWall(GLfloat size, GLenum type)
-{
+static void drawBoxWall(GLfloat size, GLenum type){
   static GLfloat n[6][3] =
   {
     {-1.0, 0.0, 0.0},
@@ -131,6 +122,21 @@ void wall(double thickness)    // function to create the walls with given thickn
     glScaled(1.0,thickness,1.0);
     glutSolidCubeWall(1.0);
     glPopMatrix();
+}
+
+int animacao=0;
+
+
+
+void duck(){
+  glTranslated(0.0, 0.1, 0.0);
+  glutSolidCubeWall(0.1);
+  glTranslated(0.0, 0.1, 0.0);
+  glutSolidCubeWall(0.05);
+  glTranslated(0.0, -0.2, -0.02);
+  glutSolidCubeWall(0.03);
+  glTranslated(0.0, 0.0, 0.04);
+  glutSolidCubeWall(0.03);
 }
 
 
@@ -198,7 +204,42 @@ void desenhaObjeto()
 }
 
 
+GLuint loadUniverso() {
+    int aux=SOIL_load_OGL_texture(
+        "universo.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+    );
+    if (aux==0){
+        printf("Erro do SOIL: %s\n",SOIL_last_result());
+    }
+    return aux;
+}
 
+void universo()
+{
+  float largura = (float)glutGet(GLUT_WINDOW_WIDTH);
+  float altura = (float)glutGet(GLUT_WINDOW_HEIGHT);
+
+  GLfloat escala = 1.0f;
+  GLfloat distancia = 100.0f;
+
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, loadUniverso());
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glBegin(GL_QUADS);
+    glTexCoord2d(1.0,1.0);glVertex3f( 100, 100, -distancia);
+    glTexCoord2d(0.0,1.0);glVertex3f( -100, 100, -distancia);
+    glTexCoord2d(0.0,0.0);glVertex3f( -100, -100, -distancia);
+    glTexCoord2d(1.0,0.0);glVertex3f( 100, -100, -distancia);
+    /*glTexCoord2d(1.0,1.0);glVertex3f( (largura/escala), (altura/escala), -distancia);
+    glTexCoord2d(0.0,1.0);glVertex3f( -(largura/escala), (altura/escala), -distancia);
+    glTexCoord2d(0.0,0.0);glVertex3f( -(largura/escala), -(altura/escala), -distancia);
+    glTexCoord2d(1.0,0.0);glVertex3f( (largura/escala), -(altura/escala), -distancia);*/
+  glEnd();
+  glDisable(GL_TEXTURE_2D);
+}
 
 
 
@@ -268,21 +309,57 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   }
 
 
-
-
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, loadWall());
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-
+  glPolygonMode(GL_FRONT, GL_FILL);
 
 
   // //glTranslated(posx,posy,0);
   glTranslated(posx,0,posy);
   glPushMatrix();
   glTranslated(0.6,0.38,0.5);
+
+
+  if(posx==getI() && posy==getJ() && camPosZ!=0){ //desenha personagem
+
+    if(getFacing()==1){
+      glBindTexture(GL_TEXTURE_2D, loadChar());
+      glPushMatrix();
+      glRotated(-90.0,0.0,1.0,0.0);
+
+
+
+      duck();
+
+      glPopMatrix();
+      glBindTexture(GL_TEXTURE_2D, loadWall());
+    }
+    if(getFacing()==0){
+      glBindTexture(GL_TEXTURE_2D, loadChar());
+      duck();
+      glBindTexture(GL_TEXTURE_2D, loadWall());
+    }
+    if(getFacing()==2){
+      glBindTexture(GL_TEXTURE_2D, loadChar());
+      glPushMatrix();
+      glRotated(-180.0,0.0,1.0,0.0);
+      duck();
+      glPopMatrix();
+      glBindTexture(GL_TEXTURE_2D, loadWall());
+    }
+    if(getFacing()==3){
+      glBindTexture(GL_TEXTURE_2D, loadChar());
+      glPushMatrix();
+      glRotated(90.0,0.0,1.0,0.0);
+      duck();
+      glPopMatrix();
+      glBindTexture(GL_TEXTURE_2D, loadWall());
+    }
+
+
+  }
   glRotated(30,0,1,0);
-  //glutSolidTeapot(0.08);
+
   glPopMatrix();
 
   glPushMatrix();
@@ -292,7 +369,16 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   glTranslated(0.4,0,0.4);
   glPopMatrix();
 
-  wall(0.02); // CHAO
+  if(floor!=0){
+
+    glBindTexture(GL_TEXTURE_2D, loadFloor());
+    wall(0.02); // CHAO
+    glBindTexture(GL_TEXTURE_2D, loadWall());
+  }else{
+    wall(0.02); // CHAO
+  }
+
+
 
   glTranslated(0.0,0.99,0.0);
   if(camPosZ==0)
@@ -322,6 +408,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
 
   glDisable(GL_TEXTURE_2D);
+
 
 
 
@@ -375,18 +462,46 @@ void desenhaLabirinto(){
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //teste
 
-  int i;
-  int j;
 
 
-  for(i=0; i<height; i++){
-    for(j=0; j<width; j++){
+  int i=getI();
+  int j=getJ();
+
+  int drawXmin = i - drawdist;
+  int drawXmax = i + drawdist;
+  int drawYmin = j -drawdist;
+  int drawYmax = j + drawdist;
+
+
+
+  if (drawXmin<0){
+    drawXmin=0;
+  }
+  if (drawYmin<0){
+    drawXmin=0;
+  }
+  if(drawXmax>=height){
+    drawXmax=height-1;
+  }
+  if(drawXmax>=width){
+    drawXmax=width-1;
+  }
+
+
+
+
+  for(i=drawXmin; i<drawXmax; i++){
+    for(j=drawYmin; j<drawYmax; j++){
       if(map[i][j]!=0){
           draw_room(i,j,check_inbouds(i,j-1),check_inbouds(i,j+1),check_inbouds(i-1,j),check_inbouds(i+1,j));
       }
     }
   }
+
+    universo();
+
   glFlush();
+
   glutSwapBuffers();
 }
 
@@ -529,6 +644,18 @@ void generate_random(){
   map_print();
   player_restart();
   flag=0;
+}
+
+
+void changefloor(){
+  if(floor==0){
+    floor=1;
+    drawdist=5;
+  }else{
+    floor=0;
+    drawdist=10;
+  }
+
 
 }
 
@@ -545,7 +672,7 @@ void generate_random(){
 
 
 
-
+/*
 void display(void)
 {
    	glClearColor (0.0,0.0,0.0,1.0);
@@ -570,3 +697,4 @@ int main(int argc,char **argv)
 	glutMainLoop();
 	return 0;
 }
+*/
