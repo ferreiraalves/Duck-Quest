@@ -1,5 +1,5 @@
 FONTES = *.cpp
-OBJETOS = *.o 
+OBJETOS = *.o
 
 all:	main clean run
 
