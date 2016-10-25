@@ -223,20 +223,20 @@ void universo()
   float altura = (float)glutGet(GLUT_WINDOW_HEIGHT);
 
   GLfloat escala = 1.0f;
-  GLfloat distancia = 100.0f;
+  GLfloat distancia = 50.0f;
 
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, loadUniverso());
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glBegin(GL_QUADS);
-    glTexCoord2d(1.0,1.0);glVertex3f( 100, 100, -distancia);
-    glTexCoord2d(0.0,1.0);glVertex3f( -100, 100, -distancia);
-    glTexCoord2d(0.0,0.0);glVertex3f( -100, -100, -distancia);
-    glTexCoord2d(1.0,0.0);glVertex3f( 100, -100, -distancia);
-    /*glTexCoord2d(1.0,1.0);glVertex3f( (largura/escala), (altura/escala), -distancia);
+    /*glTexCoord2d(1.0,1.0);glVertex3f( 50, 50, -distancia);
+    glTexCoord2d(0.0,1.0);glVertex3f( -50, 50, -distancia);
+    glTexCoord2d(0.0,0.0);glVertex3f( -50, -50, -distancia);
+    glTexCoord2d(1.0,0.0);glVertex3f( 50, -50, -distancia);*/
+    glTexCoord2d(1.0,1.0);glVertex3f( (largura/escala), (altura/escala), -distancia);
     glTexCoord2d(0.0,1.0);glVertex3f( -(largura/escala), (altura/escala), -distancia);
     glTexCoord2d(0.0,0.0);glVertex3f( -(largura/escala), -(altura/escala), -distancia);
-    glTexCoord2d(1.0,0.0);glVertex3f( (largura/escala), -(altura/escala), -distancia);*/
+    glTexCoord2d(1.0,0.0);glVertex3f( (largura/escala), -(altura/escala), -distancia);
   glEnd();
   glDisable(GL_TEXTURE_2D);
 }
