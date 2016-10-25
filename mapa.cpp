@@ -22,7 +22,6 @@ unsigned char *ht_map = SOIL_load_image ("mapa.png",
 
 float camPosZ=0;
 float camPosX;
-GLMmodel *modelo;
 
 void map_init(){
   int i,j;
@@ -117,6 +116,7 @@ drawBoxWall(GLfloat size, GLenum type)
   }
 }
 
+
 void APIENTRY
 glutSolidCubeWall(GLdouble size)
 {
@@ -132,6 +132,90 @@ void wall(double thickness)    // function to create the walls with given thickn
     glutSolidCubeWall(1.0);
     glPopMatrix();
 }
+
+
+GLuint objeto;
+float objetorot;
+char ch='1';
+
+
+GLuint loadR2D2() {
+    int aux=SOIL_load_OGL_texture(
+        "R2D2_Diffuse.jpg", // Textura da mira
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+    );
+    if (aux==0){
+        printf("Erro do SOIL: %s\n",SOIL_last_result());
+    }
+    return aux;
+}
+
+
+void carregarObjeto(char *fname) {
+  FILE *fp;
+  int read;
+  GLfloat x, y, z;
+  char ch;
+  objeto=glGenLists(1);
+  fp=fopen(fname,"r");
+  if (!fp) {
+    printf("can't open file %s\n", fname);
+    exit(1);
+  }
+
+  glPointSize(2.0);
+  glNewList(objeto, GL_COMPILE);
+  {
+    glPushMatrix();
+    glBegin(GL_POINTS);
+    while(!(feof(fp))) {
+      read=fscanf(fp,"%c %f %f %f",&ch,&x,&y,&z);
+      if(read==4&&ch=='v') {
+        glVertex3f(x,y,z);
+      }
+    }
+    glEnd();
+  }
+  glPopMatrix();
+  glEndList();
+  fclose(fp);
+}
+
+
+void desenhaObjeto()
+{
+ 	glPushMatrix();
+ 	glTranslatef(0,-40.00,-105);
+ 	glColor3f(1.0,0.23,0.27);
+ 	glScalef(0.1,0.1,0.1);
+ 	glRotatef(objetorot,0,1,0);
+ 	glCallList(objeto);
+ 	glPopMatrix();
+ 	objetorot=objetorot+0.6;
+ 	if(objetorot>360)objetorot=objetorot-360;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -460,80 +544,14 @@ void generate_random(){
 
 
 
-//globals
 
-GLuint elephant;
-float elephantrot;
-char ch='1';
-
-//other functions and main
-
-//.obj loader code begins
-
-void loadObj(char *fname)
-{
-FILE *fp;
-int read;
-GLfloat x, y, z;
-char ch;
-elephant=glGenLists(1);
-fp=fopen(fname,"r");
-if (!fp)
-    {
-        printf("can't open file %s\n", fname);
-	  exit(1);
-    }
-glPointSize(2.0);
-glNewList(elephant, GL_COMPILE);
-{
-glPushMatrix();
-glBegin(GL_POINTS);
-while(!(feof(fp)))
- {
-  read=fscanf(fp,"%c %f %f %f",&ch,&x,&y,&z);
-  if(read==4&&ch=='v')
-  {
-   glVertex3f(x,y,z);
-  }
- }
-glEnd();
-}
-glPopMatrix();
-glEndList();
-fclose(fp);
-}
-
-//.obj loader code ends here
-
-void reshape(int w,int h)
-{
-	glViewport(0,0,w,h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-        gluPerspective (60, (GLfloat)w / (GLfloat)h, 0.1, 1000.0);
-	//glOrtho(-25,25,-2,2,0.1,100);
-	glMatrixMode(GL_MODELVIEW);
-}
-
-void drawCar()
-{
- 	glPushMatrix();
- 	glTranslatef(0,-40.00,-105);
- 	glColor3f(1.0,0.23,0.27);
- 	glScalef(0.1,0.1,0.1);
- 	glRotatef(elephantrot,0,1,0);
- 	glCallList(elephant);
- 	glPopMatrix();
- 	elephantrot=elephantrot+0.6;
- 	if(elephantrot>360)elephantrot=elephantrot-360;
-}
 
 void display(void)
 {
    	glClearColor (0.0,0.0,0.0,1.0);
    	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    	glLoadIdentity();
-   	drawCar();
+   	desenhaObjeto();
    	glutSwapBuffers(); //swap the buffers
 
 }
@@ -548,7 +566,7 @@ int main(int argc,char **argv)
 	glutReshapeFunc(reshape);
         glutDisplayFunc(display);
 	glutIdleFunc(display);
-        loadObj("r2-d2.obj");//replace porsche.obj with radar.obj or any other .obj to display it
+        carregarObjeto("r2-d2.obj");//replace porsche.obj with radar.obj or any other .obj to display it
 	glutMainLoop();
 	return 0;
 }
