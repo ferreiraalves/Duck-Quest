@@ -12,6 +12,22 @@ void desceCameraZ();
 void sobeCameraX();
 void desceCameraX();
 int check_inbouds(int i, int j);
+GLuint loadwall();
+void generate_random();
+
+void inicializa ();
+void imprime ();
+
+void pushpilha();
+
+void poppilha();
+
+void imprimePilha();
+
+int validaXY();
+
+void verifica();
+
 
 
 #endif

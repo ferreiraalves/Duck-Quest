@@ -44,8 +44,8 @@ void teclaPressionada(unsigned char key, int x, int y) {
             player_restart();
             break;
 
-
-
+        case 103: //tecla "g"
+            generate_random();
 
         default:
             break;

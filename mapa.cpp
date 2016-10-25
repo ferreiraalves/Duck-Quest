@@ -2,12 +2,15 @@
 #include<stdlib.h>
 #include "SOIL/SOIL.h"
 #include <GL/freeglut.h> // Facilita a criação de código e portabilidade do código OpenGL
+#include<time.h>
 //#include <iostream.h>
 
 #include "player.h"
 
+const int tam = 200;
 const int largura = 400;
 const int altura = 400;
+
 int map [largura][altura];
 int width, height, channels;
 unsigned char *ht_map = SOIL_load_image ("mapa.png",
@@ -55,6 +58,24 @@ void map_print(){
     printf("\n");
   }
 }
+
+
+GLuint loadwall() {
+    int aux=SOIL_load_OGL_texture(
+        "floor.png", // Textura da mira
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+    );
+    if (aux==0){
+        printf("Erro do SOIL: %s\n",SOIL_last_result());
+    }
+    return aux;
+}
+
+
+
+
 
 void wall(double thickness)    // function to create the walls with given thickness
 {
@@ -159,15 +180,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
   glPopMatrix();
 
-
-
-
-
   //glFlush();
-
-
-
-
 
 }
 
@@ -217,15 +230,6 @@ void desenhaLabirinto(){
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //teste
 
-  //glPushMatrix();
-
-  // gluLookAt(  10.0+camPosX, 10.08+camPosZ, 10.0,
-  //             1.0, 0.8, 4.0,
-  //             0.0, 1.0, 0.0);
-  //
-  //
-  // glPopMatrix();
-
   int i;
   int j;
 
@@ -239,4 +243,146 @@ void desenhaLabirinto(){
   }
   glFlush();
   glutSwapBuffers();
+}
+
+
+//        -------- GERAÇAO ALEATORIA -----------
+
+
+
+typedef struct elemento{
+  int valor;
+  int percorrido;
+}elemento;
+
+void inicializa (elemento matrx[altura][largura]){
+  int i,j;
+  int aux;
+  for (i=0;i<height;i++){
+    for(j=0;j<width;j++){
+
+      aux=rand()%100;
+
+      if(aux>50)
+        matrx[i][j].valor=1;
+      else
+        matrx[i][j].valor=0
+        ;
+      matrx[i][j].percorrido=0;
+    }
+  }
+  matrx[0][0].valor=1;
+  matrx[height-1][width-1].valor=1;
+}
+
+void imprime (elemento matrx[altura][largura]){
+  int i,j;
+  for (i=0;i<height;i++){
+    for(j=0;j<width;j++){
+      printf("%d ",matrx[i][j].valor);
+    }
+    printf("\n");
+  }
+}
+
+//TAD Pilha
+
+typedef struct coord{
+  int a;
+  int b;
+}coord;
+
+int topo=0;
+
+coord pilha;
+
+void pushpilha(int a, int b, coord pilha []){
+  if(topo == tam){
+    printf("A pilha esta cheia");
+  }
+  else{
+    pilha[topo].a = a;
+    pilha[topo].b = b;
+    topo++;
+  }
+}
+
+void poppilha(coord pilha []){
+  if(topo == 0){
+      printf("A pilha esta vazia");
+  }
+  else{
+    topo--;
+  }
+}
+
+void imprimePilha(coord pilha[]){
+  int i;
+  printf("\n");
+  for(i=0;i<topo;i++){
+    printf("Passo %d: [x=%d,y=%d]\n",i+1,pilha[i].b,pilha[i].a);
+  }
+}
+
+int flag=0;
+
+int validaXY(int x, int y){
+ if(x>=0 && x<height && y>=0 && y<width){
+   return 1;
+ }
+ return 0;
+}
+
+void verifica(elemento matrx [altura][largura],int i,int j, int xde, int yde,coord pilha []){
+
+  pushpilha(i,j,pilha);
+  matrx[i][j].percorrido=1;
+
+  if (i==xde && j==yde){
+    flag=1;
+    printf("\nExiste caminho possivel:");
+    imprimePilha(pilha);
+  }
+
+  if(validaXY(i+1,j) && matrx [i+1][j].percorrido==0 && matrx [i+1][j].valor==1 && flag==0){
+    verifica (matrx,i+1,j,xde,yde,pilha);
+  }
+  if(validaXY(i,j+1) && matrx [i][j+1].percorrido==0 && matrx [i][j+1].valor==1 && flag==0){
+    verifica (matrx,i,j+1,xde,yde,pilha);
+  }
+  if(validaXY(i-1,j) && matrx [i-1][j].percorrido==0 && matrx [i-1][j].valor==1 && flag==0){
+    verifica (matrx,i-1,j,xde,yde,pilha);
+  }
+  if(validaXY(i,j-1) && matrx [i][j-1].percorrido==0 && matrx [i][j-1].valor==1 && flag==0){
+    verifica (matrx,i,j-1,xde,yde,pilha);
+  }
+  poppilha(pilha);
+}
+
+
+
+void generate_random(){
+  int i,j;
+  srand(time(NULL));
+  elemento matriz [altura][largura];
+
+  while (flag!=1){
+    printf("Gerando Matriz\n");
+    coord pilha[tam];
+    inicializa(matriz);
+    //imprime(matriz);
+    verifica(matriz,0,0,height-1,width-1,pilha);
+  }
+  for(i=0;i<height;i++){
+    for (j=0;j<width;j++){
+      map[i][j]=matriz[i][j].valor;
+    }
+  }
+  map[0][0]=3;
+  map[height-1][width-1]=2;
+  
+  map_print();
+  player_restart();
+  flag=0;
+
 }
