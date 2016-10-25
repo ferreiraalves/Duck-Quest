@@ -36,4 +36,9 @@ void switch_frame();
 
 void universo();
 
+float getHeight();
+
+float getWidth();
+
+
 #endif

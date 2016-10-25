@@ -15,7 +15,7 @@
 
 // NOVIDADE: callback de "keyboard"
 void teclaPressionada(unsigned char key, int x, int y) {
-    printf("%d -> %c\n",key,key);
+    //printf("%d -> %c\n",key,key);
     // vê qual tecla foi pressionada
     switch(key)
     {
@@ -75,7 +75,7 @@ int main(int argc,char **argv) {
   glutInitWindowPosition(0,0);
 
 
-  glutCreateWindow("Cancer Dungeon");
+  glutCreateWindow("Duck Quest");
 
 
   init_setup();

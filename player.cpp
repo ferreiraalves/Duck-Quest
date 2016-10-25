@@ -11,8 +11,11 @@ int facing=1;
 int player_i=0;
 int player_j=0;
 
+
+void player_restart();
+
 void move_fwd(){
-  
+
   if(facing==1 && check_inbouds(player_i,player_j+1)){
     player_posy+=1;
     player_j+=1;
@@ -28,6 +31,11 @@ void move_fwd(){
   if(facing==0 && check_inbouds(player_i+1,player_j)){
     player_posx+=1;
     player_i+=1;
+  }
+
+
+  if(player_i==getHeight()-1 && player_j==getWidth()-1){
+    player_restart();
   }
 }
 

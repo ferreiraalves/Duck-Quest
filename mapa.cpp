@@ -25,7 +25,7 @@ float camModo=0;
 float camPosX;
 
 int floor=0;
-int drawdist = 10;
+int drawdist = 5;
 
 
 void map_init(){
@@ -46,6 +46,15 @@ void map_init(){
     }
   }
 }
+
+float getHeight(){
+  return height;
+}
+
+float getWidth(){
+  return width;
+}
+
 
 
 void map_print(){
