@@ -34,4 +34,6 @@ void changefloor();
 
 void switch_frame();
 
+void universo();
+
 #endif

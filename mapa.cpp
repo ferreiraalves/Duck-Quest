@@ -21,8 +21,8 @@ unsigned char *ht_map = SOIL_load_image ("mapa.png",
 
 
 float camPosZ=0;
+float camModo=0;
 float camPosX;
-
 
 int floor=0;
 int drawdist = 10;
@@ -107,10 +107,7 @@ static void drawBoxWall(GLfloat size, GLenum type){
   }
 }
 
-
-void APIENTRY
-glutSolidCubeWall(GLdouble size)
-{
+void APIENTRY glutSolidCubeWall (GLdouble size){
   drawBoxWall(size, GL_QUADS);
 }
 
@@ -124,122 +121,30 @@ void wall(double thickness)    // function to create the walls with given thickn
     glPopMatrix();
 }
 
-int animacao=0;
+float frame=1;
 
-
+void switch_frame(){
+  if (frame==0)
+    frame=1;
+  else
+    frame=0;
+}
 
 void duck(){
+  glBindTexture(GL_TEXTURE_2D, loadPinto());
   glTranslated(0.0, 0.1, 0.0);
   glutSolidCubeWall(0.1);
   glTranslated(0.0, 0.1, 0.0);
   glutSolidCubeWall(0.05);
-  glTranslated(0.0, -0.2, -0.02);
+  glBindTexture(GL_TEXTURE_2D, loadPe());
+  glTranslated(-frame/40, -0.2, -0.02);
   glutSolidCubeWall(0.03);
-  glTranslated(0.0, 0.0, 0.04);
+  glTranslated(2*frame/40, 0.0, 0.04);
   glutSolidCubeWall(0.03);
+
+  switch_frame();
 }
 
-
-GLuint objeto;
-float objetorot;
-char ch='1';
-
-
-GLuint loadR2D2() {
-    int aux=SOIL_load_OGL_texture(
-        "R2D2_Diffuse.jpg", // Textura da mira
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_INVERT_Y
-    );
-    if (aux==0){
-        printf("Erro do SOIL: %s\n",SOIL_last_result());
-    }
-    return aux;
-}
-
-
-void carregarObjeto(char *fname) {
-  FILE *fp;
-  int read;
-  GLfloat x, y, z;
-  char ch;
-  objeto=glGenLists(1);
-  fp=fopen(fname,"r");
-  if (!fp) {
-    printf("can't open file %s\n", fname);
-    exit(1);
-  }
-
-  glPointSize(2.0);
-  glNewList(objeto, GL_COMPILE);
-  {
-    glPushMatrix();
-    glBegin(GL_POINTS);
-    while(!(feof(fp))) {
-      read=fscanf(fp,"%c %f %f %f",&ch,&x,&y,&z);
-      if(read==4&&ch=='v') {
-        glVertex3f(x,y,z);
-      }
-    }
-    glEnd();
-  }
-  glPopMatrix();
-  glEndList();
-  fclose(fp);
-}
-
-
-void desenhaObjeto()
-{
- 	glPushMatrix();
- 	glTranslatef(0,-40.00,-105);
- 	glColor3f(1.0,0.23,0.27);
- 	glScalef(0.1,0.1,0.1);
- 	glRotatef(objetorot,0,1,0);
- 	glCallList(objeto);
- 	glPopMatrix();
- 	objetorot=objetorot+0.6;
- 	if(objetorot>360)objetorot=objetorot-360;
-}
-
-
-GLuint loadUniverso() {
-    int aux=SOIL_load_OGL_texture(
-        "universo.png",
-        SOIL_LOAD_AUTO,
-        SOIL_CREATE_NEW_ID,
-        SOIL_FLAG_INVERT_Y
-    );
-    if (aux==0){
-        printf("Erro do SOIL: %s\n",SOIL_last_result());
-    }
-    return aux;
-}
-
-void universo()
-{
-  float largura = (float)glutGet(GLUT_WINDOW_WIDTH);
-  float altura = (float)glutGet(GLUT_WINDOW_HEIGHT);
-
-  GLfloat escala = 1.0f;
-  GLfloat distancia = 50.0f;
-
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, loadUniverso());
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  glBegin(GL_QUADS);
-    glTexCoord2d(1.0,1.0);glVertex3f( 50, 50, -distancia);
-    glTexCoord2d(0.0,1.0);glVertex3f( -50, 50, -distancia);
-    glTexCoord2d(0.0,0.0);glVertex3f( -50, -50, -distancia);
-    glTexCoord2d(1.0,0.0);glVertex3f( 50, -50, -distancia);
-    /*glTexCoord2d(1.0,1.0);glVertex3f( (largura/escala), (altura/escala), -distancia);
-    glTexCoord2d(0.0,1.0);glVertex3f( -(largura/escala), (altura/escala), -distancia);
-    glTexCoord2d(0.0,0.0);glVertex3f( -(largura/escala), -(altura/escala), -distancia);
-    glTexCoord2d(1.0,0.0);glVertex3f( (largura/escala), -(altura/escala), -distancia);*/
-  glEnd();
-  glDisable(GL_TEXTURE_2D);
-}
 
 
 void draw_room(float posx, float posy, int esquerda, int direita, int cima, int baixo){
@@ -260,7 +165,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
 
   if(getFacing()==1){
-    gluLookAt( getX(), altura+camPosZ/5*2, getY()-camPosZ/5*3,
+    gluLookAt( getX(), altura+camPosZ/5*(1+camModo), getY()-camPosZ/5*3,
                getX(), altura, getY()+1,
                0.0, 1.0, 0.0);
     //printf("Olhando para direita");
@@ -268,7 +173,7 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
   if(getFacing()==2){
 
-    gluLookAt( getX()+camPosZ/5*3, altura+camPosZ/5*2, getY(),
+    gluLookAt( getX()+camPosZ/5*3, altura+camPosZ/5*(1+camModo), getY(),
                getX()-1, altura, getY(),
                0.0, 1.0, 0.0);
 
@@ -277,14 +182,14 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   }
 
   if(getFacing()==3){
-    gluLookAt( getX(), altura+camPosZ/5*2, getY()+camPosZ/5*3,
+    gluLookAt( getX(), altura+camPosZ/5*(1+camModo), getY()+camPosZ/5*3,
                getX(), altura, getY()-1,
                0.0, 1.0, 0.0);
     //printf("Olhando para esquerda");
   }
 
   if(getFacing()==0){
-    gluLookAt( getX()-camPosZ/5*3, altura+camPosZ/5*2, getY(),
+    gluLookAt( getX()-camPosZ/5*3, altura+camPosZ/5*(1+camModo), getY(),
                getX()+1, altura, getY(),
                0.0, 1.0, 0.0);
     //printf("Olhando para cima");
@@ -305,7 +210,6 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
   if(posx==getI() && posy==getJ() && camPosZ!=0){ //desenha personagem
 
     if(getFacing()==1){
-      glBindTexture(GL_TEXTURE_2D, loadChar());
       glPushMatrix();
       glRotated(-90.0,0.0,1.0,0.0);
 
@@ -317,12 +221,11 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
     if(getFacing()==0){
-      glBindTexture(GL_TEXTURE_2D, loadChar());
+
       duck();
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
     if(getFacing()==2){
-      glBindTexture(GL_TEXTURE_2D, loadChar());
       glPushMatrix();
       glRotated(-180.0,0.0,1.0,0.0);
       duck();
@@ -330,7 +233,6 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
       glBindTexture(GL_TEXTURE_2D, loadWall());
     }
     if(getFacing()==3){
-      glBindTexture(GL_TEXTURE_2D, loadChar());
       glPushMatrix();
       glRotated(90.0,0.0,1.0,0.0);
       duck();
@@ -393,7 +295,6 @@ void draw_room(float posx, float posy, int esquerda, int direita, int cima, int 
 
 
 
-
   //glFlush();
 
 }
@@ -419,8 +320,14 @@ int check_inbouds(int i, int j){
 void sobeCameraZ(){
   if(camPosZ==0)
     camPosZ=1;
-  else
+  else if(camPosZ==1 && camModo==0){
+    camModo=1;
+  }
+  else{
     camPosZ=0;
+    camModo=0;
+  }
+
 
 }
 void desceCameraZ(){
@@ -434,7 +341,29 @@ void desceCameraX(){
   camPosX-=0.1;
 }
 
+void universo(){
 
+  float largura = (float)glutGet(GLUT_WINDOW_WIDTH);
+  float altura = (float)glutGet(GLUT_WINDOW_HEIGHT);
+
+  GLfloat escala = 1.0f;
+  GLfloat distancia = 50.0f;
+
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, loadUniverso());
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glBegin(GL_QUADS);
+    glTexCoord2d(1.0,1.0);glVertex3f( 50, 50, -distancia);
+    glTexCoord2d(0.0,1.0);glVertex3f( -50, 50, -distancia);
+    glTexCoord2d(0.0,0.0);glVertex3f( -50, -50, -distancia);
+    glTexCoord2d(1.0,0.0);glVertex3f( 50, -50, -distancia);
+    /*glTexCoord2d(1.0,1.0);glVertex3f( (largura/escala), (altura/escala), -distancia);
+    glTexCoord2d(0.0,1.0);glVertex3f( -(largura/escala), (altura/escala), -distancia);
+    glTexCoord2d(0.0,0.0);glVertex3f( -(largura/escala), -(altura/escala), -distancia);
+    glTexCoord2d(1.0,0.0);glVertex3f( (largura/escala), -(altura/escala), -distancia);*/
+  glEnd();
+  glDisable(GL_TEXTURE_2D);
+}
 
 
 
@@ -479,11 +408,8 @@ void desenhaLabirinto(){
       }
     }
   }
-
-    universo();
-
+  universo();
   glFlush();
-
   glutSwapBuffers();
 }
 
@@ -640,43 +566,3 @@ void changefloor(){
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-void display(void)
-{
-   	glClearColor (0.0,0.0,0.0,1.0);
-   	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   	glLoadIdentity();
-   	desenhaObjeto();
-   	glutSwapBuffers(); //swap the buffers
-
-}
-
-int main(int argc,char **argv)
-{
-	glutInit(&argc,argv);
-	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
-	glutInitWindowSize(800,450);
-	glutInitWindowPosition(20,20);
-	glutCreateWindow("ObjLoader");
-	glutReshapeFunc(reshape);
-        glutDisplayFunc(display);
-	glutIdleFunc(display);
-        carregarObjeto("r2-d2.obj");//replace porsche.obj with radar.obj or any other .obj to display it
-	glutMainLoop();
-	return 0;
-}
-*/

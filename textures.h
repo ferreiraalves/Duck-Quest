@@ -8,5 +8,7 @@ GLuint loadFloor();
 GLuint loadPinto();
 GLuint loadPe();
 
+GLuint loadUniverso();
+
 
 #endif

@@ -45,6 +45,21 @@ GLuint loadPe() {
     return aux;
 }
 
+GLuint loadUniverso() {
+    int aux=SOIL_load_OGL_texture(
+        "universo.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+    );
+    if (aux==0){
+        printf("Erro do SOIL: %s\n",SOIL_last_result());
+    }
+    return aux;
+}
+
+
+
 GLuint loadMetal() {
     int aux=SOIL_load_OGL_texture(
         "metal.jpeg", // Textura do bule
