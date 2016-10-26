@@ -35,6 +35,10 @@ void move_fwd(){
 
 
   if(player_i==getHeight()-1 && player_j==getWidth()-1){
+    printf("\n");
+    printf("\n\nPARABENS VOCE.......... VOLTOU PARA O INICIO\n\n");
+    printf("\n");
+    printf("\n");
     player_restart();
   }
 }
@@ -57,6 +61,16 @@ void move_bkwd(){
     player_posx-=1;
     player_i-=1;
   }
+
+  if(player_i==getHeight()-1 && player_j==getWidth()-1){
+    printf("\n");
+    printf("\n\nPARABENS VOCE.......... VOLTOU PARA O INICIO\n\n");
+    printf("\n");
+    printf("\n");
+    player_restart();
+  }
+
+
 }
 
 void turn_left(){
