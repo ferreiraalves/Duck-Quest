@@ -334,7 +334,7 @@ void sobeCameraZ(){
   }
   else if(camPosZ==1 && camModo==0){
     camModo=1;
-    drawdist=5
+    drawdist=5;
   }
   else{
     camPosZ=0;
