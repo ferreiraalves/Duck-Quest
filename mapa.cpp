@@ -328,14 +328,18 @@ int check_inbouds(int i, int j){
 
 
 void sobeCameraZ(){
-  if(camPosZ==0)
+  if(camPosZ==0){
     camPosZ=1;
+    drawdist=5;
+  }
   else if(camPosZ==1 && camModo==0){
     camModo=1;
+    drawdist=5
   }
   else{
     camPosZ=0;
     camModo=0;
+    drawdist=10;
   }
 
 
